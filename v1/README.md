@@ -390,6 +390,10 @@ The (prov) Activity "informing", harvests needed information and expose it on ge
 
 The Information (a prov Entity, an instance of `pip:Information`) is the product of the *Informing Activity* as an instance of *Information Process* (`pip:InformationProcess`), delivered to requesting **PipCo** by finalizing response to given *Information Request*.
 
+### Example
+
+[Example data-typed request](./example/process/EXAMPLE.TATA-TYPED.REQUEST.md).)
+
 ---
 
 ## Future

@@ -12,7 +12,7 @@
 @prefix cred:                     <https://w3.org/2018/credentials#> .
 @prefix sec:                      <https://w3id.org/security#> .
 
-@prefix pip:                      <https://github.com/nicosResearchAndDevelopment/LDS/blob/main/misc/policy/information/point/> .
+@prefix pip:                      <https://github.com/nicosResearchAndDevelopment/pip/tree/main/v1/> .
 
 pip:
     a                             voaf:Vocabulary ;
@@ -27,7 +27,7 @@ pip:
     dct:created                   "2023-07-03"^^xsd:date ;
     dct:modified                  "2023-07-13"^^xsd:date ;
     owl:versionInfo               "0.0.1" ;
-    vann:preferredNamespaceUri    "https://github.com/nicosResearchAndDevelopment/LDS/blob/main/misc/policy/information/point/" ;
+    vann:preferredNamespaceUri    "https://github.com/nicosResearchAndDevelopment/pip/tree/main/v1/" ;
     vann:preferredNamespacePrefix "pip:" ;
     void:vocabulary               vann:, void:, voaf:, dct: ;
     rdfs:comment                  """"""@en ;
@@ -37,6 +37,19 @@ pip:Information
     a                owl:Class ;
     rdfs:subClassOf  prov:Entity ;
     a                skos:Concept ;
+    rdfs:isDefinedBy pip: .
+
+pip:requestId
+    a                rdf:Property ;
+    rdfs:domain      pip:Information ;
+    rdfs:range       xsd:anyURI ;    ## REM: cardinality [0..1]
+    rdfs:comment     """Maybe used for asynchronous communication, too."""@en ;
+    rdfs:isDefinedBy pip: .
+
+pip:requestedAt
+    a                rdf:Property ;
+    rdfs:domain      pip:Information ;
+    rdfs:range       xsd:dateTime ;    ## REM: cardinality [0..1]
     rdfs:isDefinedBy pip: .
 
 pip:unit
