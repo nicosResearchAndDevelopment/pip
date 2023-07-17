@@ -2,9 +2,10 @@
 
 > > > **CAUTION**
 >
+> - current status is something like a **draft** or starting point for **discussion**
+> - current text is sometimes redundant and will be condensed by further work
 > - all definitions sometimes are a *little* underspecified* :-(
 > - all specification might contain *bugs*, that will be eliminated in future :-)
-> - current status is something like a **draft**
 > - ...hopefully being a good starting point
 > - so far **NOT** usable for production!
 >
@@ -20,31 +21,37 @@ J. Langkau
 
 ## Editors
 
-	Jörg Langkau (nicos AG}
+- Jörg Langkau (nicos AG}
 
 ## Contributors
 
+---
+
 ## Abstract
 
-This document describes the architecture of a Policy Information Point (**PIP**, as concept) and given PIP Data Model [**PIP-DM**].
+This document describes the architecture of a Policy Information Point (**PIP**, as concept) and given PIP Data Model [*
+*PIP-DM**].
+
+---
 
 ## Table of Content
 
 - [Introduction](#introduction)
 - [Conventions](#conventions)
 - [Protocol](#protocol)
-    - [Data Type related](#data-type-related)
-    - [Object Type related](#object-type-related)
+	- [Data Type related](#data-type-related)
+	- [Object Type related](#object-type-related)
 - [Server](#server)
 - [Client](#client)
 - [Authorisation](#authorisation]
 - [Binding](#binding)
-    - [http](#http)
-    - [http2](#http2)
-    - [gRPC](#grpc)
-    - [websocket](#websocket)
-    - [idscp2](#idscp2)
-    - [tls](#tls)
+	- [http](#http)
+	- [http2](#http2)
+	- [gRPC](#grpc)
+	- [websocket](#websocket)
+	- [idscp2](#idscp2)
+	- [tls](#tls)
+- [Process](#Process)
 - [References](#references)
 
 *Table of content 'Policy Information Point'*.
@@ -61,7 +68,8 @@ This document describes the architecture of a Policy Information Point (**PIP**,
 
 ## Introduction
 
-The Policy Information Point (**PIP**), as a concept), as member of the ["Policy-Family"](https://github.com/nicosResearchAndDevelopment/Policy-Family):
+The Policy Information Point (**PIP
+**), as a concept), as member of the ["Policy-Family"](https://github.com/nicosResearchAndDevelopment/Policy-Family):
 
 - Policy Enforcement Point (**PEP**), starting point, targeted by given request.
 - Policy Decision Point (**PDP**), computing given rules and constrains to express formulated rights.
@@ -69,12 +77,9 @@ The Policy Information Point (**PIP**), as a concept), as member of the ["Policy
 - Policy Administration Point (**PAP**), managing given policies.
 - Policy Repository Point (**PRP**), persisting given policies.
 
-...behaves in the end as a Service Instance **Pip**. At runtime **Pip
-** will be requested for some information by a Consumer **PipCo**, being a part of up and running **Pdp**: received
-*information* will be used - *MUST* be used to yield needed decisions or expressions, typically used for controlling the access over a resource (Access Control) or controlling the usage of a resource (Usage Control).
+...behaves in the end as a Service Instance **Pip**. At runtime **Pip** will be requested for some information by a Consumer **PipCo**, being a part of up and running **Pdp**: received *information* will be used - *MUST* be used to yield needed decisions or expressions, typically used for controlling the access over a resource (Access Control) or controlling the usage of a resource (Usage Control).
 
-Despite posed simplicity - even the smallest piece of information, only one tiny value needed by a **Pdp**, accessed by its **PipCo**, fetching data (the *information*) from a distant **Pip**, has a huge impact: is this
-*information* not accessible or - even bad - not correct or reliable, given **Pdp** is **NOT** able to produce needed conclusion. Once again: one tiny value, a *boolean* only. This unalterable fact unfolds the importance of **PIP** (here again quoted as a concept) - if needed.
+Despite posed simplicity - even the smallest piece of information, only one tiny value needed by a **Pdp**, accessed by its **PipCo**, fetching data (the *information*) from a distant **Pip**, has a huge impact: is this *information* not accessible or - even bad - not correct or reliable, given **Pdp** is **NOT** able to produce needed conclusion. Once again: one tiny value, a *boolean* only. This unalterable fact unfolds the importance of **PIP** (here again quoted as a concept) - if needed.
 
 The concept of **PIP**
 
@@ -94,9 +99,7 @@ Despite the latter statements, **PIP** is willing to introduce examples (for hop
 
 The **PIP**, literally speaking:
 
-> A *Policy*, as subject of this story, computed by an agent, the Policy Decision Point (**PDP**), needs some
-*Information* as input to given constraints (utilized by given rules) and gets it from a
-*Point*, the Policy Information Point (**PIP**).
+> A *Policy*, as subject of this story, computed by an agent, the Policy Decision Point (**PDP**), needs some *Information* as input to given constraints (utilized by given rules) and gets it from a *Point*, the Policy Information Point (**PIP**).
 
 To be precise, three types of **PIP**s can be identified:
 
@@ -106,8 +109,7 @@ To be precise, three types of **PIP**s can be identified:
 
 ### indirect
 
-Even *internal* and *direct* are willing to work on proposed model (offered here), but the main addressee is the
-*indirect* Policy Information Point.
+Even *internal* and *direct* are willing to work on proposed model (offered here), but the main addressee is the *indirect* Policy Information Point.
 
 This proposal has no preference to any transfer/transport protocol. Saying so, we have to understand, that given examples are shown to clarify and make it easy to use. All examples are all aligned to all other bindings. Saying so, we are sure we are able to adopt any...
 
@@ -320,7 +322,7 @@ Example (json): data-typed and *multi-valued* `pip:value`, URIs:
 
 ---
 
-##                  
+##                   
 
 ## Object Type related Information
 
@@ -330,8 +332,7 @@ Example (json): data-typed and *multi-valued* `pip:value`, URIs:
 
 ### Instance
 
-The Policy Information Point Service Instance (**PipSi
-**) behaves as an up-and-running application, providing information and acting *on behalf of* well-known agent. PipSi refers to given PIP Service Profile.
+The Policy Information Point Service Instance (**PipSi**) behaves as an up-and-running application, providing information and acting *on behalf of* well-known agent. PipSi refers to given PIP Service Profile.
 
 ## Client
 
@@ -369,6 +370,28 @@ Understanding the usage of websocket here will guide to other bindings, like tls
 
 ### tls
 
+## Process
+
+The starting point is the *Information Request*:
+
+### Information Request
+
+The *Information Request* (`pip:InformationRequest`) is initiated by *Policy Information Point Consumer* (**PipCo**), sending the request to given *Policy Information Point Service Instance* (**PipSi**), the data-provider. At **PipSi**-side the *Information Process* (`pip:InformationProcess`) is triggered by **PipCo**'s *Information Request* as an (prov) Entity.
+
+### Information Process
+
+**PipSi's** *Information Process* (`pip:InformationProcess`), triggered by **PipCo**'s *Information Request* (`pip:InformationRequest`), instantiates the *informing* (prov) Activity.
+
+### Informing Activity
+
+The (prov) Activity "informing", harvests needed information and expose it on generated information (prov) Entity (`pip:Information`).
+
+### Information
+
+The Information (a prov Entity, an instance of `pip:Information`) is the product of the *Informing Activity* as an instance of *Information Process* (`pip:InformationProcess`), delivered to requesting **PipCo** by finalizing response to given *Information Request*.
+
+---
+
 ## Future
 
 Ideas, next steps, clarifications.
@@ -379,7 +402,7 @@ Describing a given Policy Information Point Consumer (**PipCo**) is able to subs
 
 ### Verifiable Information
 
-Information provided by given PIP Service Instance (**PipSi**) in a verifiable fashion.
+Information provided by given *Policy Information Point Service Instance* (**PipSi**) in a verifiable fashion.
 
 ## References
 

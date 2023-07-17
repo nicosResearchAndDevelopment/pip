@@ -76,6 +76,7 @@ pip:InformationRequest
     a                owl:Class ;
     rdfs:subClassOf  prov:Entity ;      ## REM: so, behaves like a trigger...
     a                skos:Concept ;
+    rdfs:comment     """It is an (prov) Entity, not an (prov) Activity. On given *Policy Information Point Service Instance* (**PipSi**) this request behaves as a trigger to PipSi's instance of a 'pip:InformationProcess', an (prov) Activity, utilizing delivered instance of 'pip:InformationRequest'."""@en ;
     rdfs:isDefinedBy pip: .
 
 pip:expectedType
@@ -91,5 +92,17 @@ pip:expectedUnit
     rdfs:isDefinedBy pip: .
 
 ## endregion information request
+
+## region process
+
+pip:InformationProcess
+    a                owl:Class ;
+    rdfs:subClassOf  prov:Activity ;        ## REM: "informing"
+    ## rdfs:subClassOf fno:Function ;
+    a                skos:Concept ;
+    rdfs:comment     """An instance of 'pip:InformationProcess' is an (prov) Activity on the side of given *Policy Information Point Service Instance*, **PipSi**, the data-provider. The finished (prov) Activity will generate the required (triggered by given *Policy Information Point Consumer*, **PipCo**, with an instance of 'pip:InformationRequest') instance of 'pip:Information', an (prov) Entity."""@en ;
+    rdfs:isDefinedBy pip: .
+
+## endregion process
 
 ## EOF: pip.ttl
