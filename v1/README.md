@@ -123,10 +123,6 @@ The Information needed by a **PDP** (and Policy) and provided by a **PIP**:
 
 ### Data Information
 
-### Object Information
-
-### Future: Boolean Information
-
 ---
 
 ## Terminology
@@ -241,7 +237,7 @@ Example (json): Information-node valid from/to (`pip:validFrom`, `pip:validTo`) 
 }
 ```
 
-Using `pip:validFrom` / `pip:validTo` might have a strong impact: given **PipSi`` consumer, the Policy Information Point Consumer (**PipCo**) is able to cache given information.
+Using `pip:validFrom` / `pip:validTo` might have a strong impact: given **PipSi** consumer, the Policy Information Point Consumer (**PipCo**) is able to cache given information.
 
 Focussing on `pip:validTo` **PipCo** might decide to *cache* given information (here: content of `pip:value`) until it is expired. Doing so **PipCo** (to be more precise, the working agent **Pdp** utilizing cached value) is able to omit further requests up to stated point in time.
 
@@ -322,9 +318,56 @@ Example (json): data-typed and *multi-valued* `pip:value`, URIs:
 
 ---
 
-##                   
+## Request
 
-## Object Type related Information
+Given Information Consumer (**PipCo**, acting in given **Pdp**) makes a request.
+
+Example: PipCo of 'example2' requests information, introducing `pip:asset` and `pip:timestamp`:
+
+```json
+{
+  "@id": "https://www.example2.com/information-request#ab-cd-ef",
+  "@type": "pip:InformationRequest",
+  "pip:asset": ".../temperature",
+  "pip:timestamp": "2023-07-01T19:58:20.114Z",
+  "pip:expectedUnit": "https://dbpedia.org/page/Celsius",
+  "pip:expectedType": "xsd:decimal"
+}
+```
+
+Using `pip:timestamp`: PipCo's point in time, sending this unique Information Request.
+
+Using `pip:asset`: the temperature is adressed by given identifier and (possibly) not by PipSi's endpoint. Doing so, it reveals the opportunity to present the endpoint (PipSi) as an generic endpoint: all offered qualities (information) will be available at *one* PipSi-endpoint.
+
+> TODO: TBC: POST recommended (**NOT** GET): request-parameters can be easily enriched for future mechanics!
+
+PipSi's response, reusing PiCo's Information Request-Id (`pip:requestId`) and reusing `pip:asset`, the id of requested resource (here: the unique temperature-sensor):
+
+```json
+{
+  "@id": "https://www.example.com/information#42-42-42-42-42-99",
+  "@type": "pip:Information",
+  "pip:requestId": "https://www.example2.com/information-request#ab-cd-ef",
+  "pip:timestamp": "2023-07-01T19:58:20.121Z",
+  "pip:asset": ".../temperature",
+  "pip:validFrom": { "@type": "xsd:dateTime", "@value": "2023-07-01T19:58:20.121Z" },
+  "pip:validUntil": { "@type": "xsd:dateTime", "@value": "2023-07-16T14:33:11.42Z" },
+  "pip:unit": "https://dbpedia.org/page/Celsius",
+  "pip:value": {
+    "@type": "xsd:decimal",
+    "@value": "42.24" 
+  }
+}
+```
+
+Using `pip:timestamp`: PipSi's point in time, responding with this unique Information (7 milliseconds after PipCo's Information Request).
+
+## Self Description of PipSi
+
+> TODO: 
+
+---
+
 
 ## Service
 
@@ -392,7 +435,7 @@ The Information (a prov Entity, an instance of `pip:Information`) is the product
 
 ### Example
 
-[Example data-typed request](./example/process/EXAMPLE.TATA-TYPED.REQUEST.md).)
+[Example: data-typed request (Process)](./example/process/EXAMPLE.DATA-TYPED.REQUEST.md).
 
 ---
 
@@ -400,9 +443,59 @@ The Information (a prov Entity, an instance of `pip:Information`) is the product
 
 Ideas, next steps, clarifications.
 
+### Object Type related Information
+
+PIP's first-class-citizen is the data-typed value (`pip:value`), used on policy-constrain-level: constraints are working invariably on data-typed-imformation!
+
+Introducing "Object Type related Information": given Policy Information Point Service Instance (**PipSi**) provides - objects. Those objects are (sometimes) needed on Pdp-side, not provided *internally* or *directly*, so this information is to be labeled as *indirect*.
+
+> TODO: excurse on internal, direct and indirect
+
+---
+
+### Boolean Information
+
+The main idea here is, to expand the toolset of **PIP**. A Policy Information Point Service Instance is able to compute constraints, comparing two (data-typed) values, utilizing well-known operators.
+
+Example: PipCo of 'example2' requests constrain-computation:
+
+```json
+{
+  "@id": "https://www.example2.com/information-request#gh-ah-41-42",
+  "@type": "pip:ConstraintRequest",
+  "pip:timestamp": "2023-07-01T19:58:20.114Z",
+  "pip:constraint": [
+    {
+	  "@type": "odrl:Constraint",
+	  "pip:leftOperand": { "@type": "xsd:decimal", "@value": "41" },
+	  "pip:operator": { "@type": "odrl:operator", "@value": "odrl:lt" },
+      "pip:rightOperand": { "@type": "xsd:decimal", "@value": "42" }
+    }
+  ],
+  "pip:expectedType": "xsd:boolean"
+}
+```
+
+PipSi's response:
+
+```json
+{
+  "@id": "https://www.example.com/information#42-42-42-42-42-99099",
+  "@type": "pip:Information",
+  "pip:requestId": "https://www.example2.com/information-request#gh-ah-41-42",
+  "pip:timestamp": "2023-07-01T19:58:20.121Z",
+  "pip:value": {
+    "@type": "xsd:boolean",
+    "@value": "true" 
+  }
+}
+```
+
 ### Subscriptions
 
 Describing a given Policy Information Point Consumer (**PipCo**) is able to subscribe information, so values can be cached at runtime (on **PDP**-agent-side) and will be replaced while Policy Information Point Service Instance (**PipSi**) is updating the needed information to gain improved performance and drop latency and band-width.
+
+Sended Information (by given Information Provider, **PipSi**) should not be decorated with durability of provided value (`pip:value`). This seems natural: the provider updates when relevant. The consumer (**PipCo**) will recieve needed information with best quality and timley. Durability-decoration might be cause of errors: cached information might be outdated and so will be deleted, constraint (related to this information) is not working any more: information underrun. So, outdated information must be activily re-requested (as it has to be done by non-subscribed, regular requested data, too).
 
 ### Verifiable Information
 
