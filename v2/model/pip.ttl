@@ -1,0 +1,129 @@
+@prefix dct:                      <http://purl.org/dc/terms/> .
+@prefix owl:                      <http://www.w3.org/2002/07/owl#> .
+@prefix prov:                     <http://www.w3.org/ns/prov#> .
+@prefix rdf:                      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:                     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:                     <http://www.w3.org/2004/02/skos
+@prefix vann:                     <http://purl.org/vocab/vann/> .
+@prefix voaf:                     <http://purl.org/vocommons/voaf#> .
+@prefix void:                     <http://rdfs.org/ns/void#> .
+@prefix xsd:                      <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix cred:                     <https://w3.org/2018/credentials#> .
+@prefix sec:                      <https://w3id.org/security#> .
+
+@prefix pip:                      <https://github.com/nicosResearchAndDevelopment/pip/tree/main/v1/> .
+
+pip:
+    a                             voaf:Vocabulary ;
+    a                             owl:Ontology ;
+    skos:prefLabel                "The Policy Information Point Ontology, version 1"^^xsd:string ;
+    rdfs:label                    "Policy Information Point Ontology (v1)"@en ;
+    dct:title                     "Model for Policy Information Point"@en ;
+    dct:description               """."""@en ;
+    dct:creator                   <https:jottomat.solidweb.org/profile/card#me> ;
+    dct:creator                   <https:jottomat.solidweb.org/profile/card#me> ;
+    dct:publisher                 <https:jottomat.solidweb.org/profile/card#me> ;
+    dct:created                   "2023-07-03"^^xsd:date ;
+    dct:modified                  "2023-07-13"^^xsd:date ;
+    owl:versionInfo               "0.0.1" ;
+    vann:preferredNamespaceUri    "https://github.com/nicosResearchAndDevelopment/pip/tree/main/v1/" ;
+    vann:preferredNamespacePrefix "pip:" ;
+    void:vocabulary               vann:, void:, voaf:, dct: ;
+    rdfs:comment                  """"""@en ;
+    rdfs:isDefinedBy              <https:jottomat.solidweb.org/profile/card#me> ; .
+
+pip:Information
+    a                owl:Class ;
+    rdfs:subClassOf  prov:Entity ;
+    a                skos:Concept ;
+    rdfs:isDefinedBy pip: .
+
+## TODO: TBD: it can be dropped?!?
+pip:requestId
+    a                rdf:Property ;
+    rdfs:domain      pip:Information ;
+    rdfs:range       xsd:anyURI ;    ## REM: cardinality [0..1]
+    rdfs:comment     """Maybe used for asynchronous communication, too."""@en ;
+    rdfs:isDefinedBy pip: .
+
+pip:requestedAt
+    a                rdf:Property ;
+    rdfs:domain      pip:Information ;
+    rdfs:range       xsd:dateTime ;    ## REM: cardinality [0..1]
+    rdfs:isDefinedBy pip: .
+
+pip:unit
+    a                rdf:Property ;
+    rdfs:domain      pip:Information ;
+    rdfs:range       rdfs:Resource ;    ## REM: cardinality [0..1]
+    rdfs:seeAlso     "http://www.openphacts.org/specs/2013/WD-units-20130913/" ; ## ALERT: unsafe!!!!!!!!!!!!!!!!!!
+    rdfs:isDefinedBy pip: .
+
+pip:validFrom
+    a                rdf:Property ;
+    rdfs:domain      pip:Information ;
+    rdfs:range       xsd:dateTime ;    ## REM: cardinality [0..1]
+    rdfs:isDefinedBy pip: .
+
+pip:validTo
+    a                rdf:Property ;
+    rdfs:domain      pip:Information ;
+    rdfs:range       xsd:dateTime ;    ## REM: cardinality [0..1]
+    rdfs:isDefinedBy pip: .
+
+pip:termsOfUse
+    a                rdf:Property ;
+    rdfs:domain      pip:Information ;
+    rdfs:range       xsd:anyURI ;    ## TODO: cardinality [0..1] ?!?
+    rdfs:isDefinedBy pip: .
+
+pip:value
+    a                rdf:Property ;
+    rdfs:domain      pip:Information ;
+    rdfs:range       rdfs:Resource ;    ## REM: cardinality [0..1]
+    rdfs:isDefinedBy pip: .
+
+## region information request
+
+pip:InformationRequest
+    a                owl:Class ;
+    rdfs:subClassOf  prov:Entity ;      ## REM: so, behaves like a trigger...
+    a                skos:Concept ;
+    rdfs:comment     """It is an (prov) Entity, not an (prov) Activity. On given *Policy Information Point Service Instance* (**PipSi**) this request behaves as a trigger to PipSi's instance of a 'pip:InformationProcess', an (prov) Activity, utilizing delivered instance of 'pip:InformationRequest'."""@en ;
+    rdfs:isDefinedBy pip: .
+
+## TODO: TBD: move to h2tp:Accept?!?
+pip:expectedType
+    a                rdf:Property ;
+    rdfs:domain      pip:InformationRequest ;
+    rdfs:range       rdfs:Class ;       ## REM: cardinality [0..1]
+    rdfs:isDefinedBy pip: .
+
+pip:expectedUnit
+    a                rdf:Property ;
+    rdfs:domain      pip:InformationRequest ;
+    rdfs:range       rdfs:Resource ;    ## REM: cardinality [0..1]
+    rdfs:isDefinedBy pip: .
+
+pip:target
+    a                rdf:Property ;
+    rdfs:domain      pip:InformationRequest ;
+    rdfs:range       xsd:anyURI  ;    ## REM: cardinality [0..1]
+    rdfs:isDefinedBy pip: .
+
+## endregion information request
+
+## region process
+
+pip:InformationProcess
+    a                owl:Class ;
+    rdfs:subClassOf  prov:Activity ;        ## REM: "informing"
+    ## rdfs:subClassOf fno:Function ;
+    a                skos:Concept ;
+    rdfs:comment     """An instance of 'pip:InformationProcess' is an (prov) Activity on the side of given *Policy Information Point Service Instance*, **PipSi**, the data-provider. The finished (prov) Activity will generate the required (triggered by given *Policy Information Point Consumer*, **PipCo**, with an instance of 'pip:InformationRequest') instance of 'pip:Information', an (prov) Entity."""@en ;
+    rdfs:isDefinedBy pip: .
+
+## endregion process
+
+## EOF: pip.ttl
