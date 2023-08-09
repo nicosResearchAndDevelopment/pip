@@ -150,7 +150,7 @@ http request:
 POST https://www.nicos-ag.com/weather/station/muenster/temperature
 
 {
-	"@context": https://github.com/nicosResearchAndDevelopment/pip/tree/main/v2/
+	"@context": "https://github.com/nicosResearchAndDevelopment/pip/tree/main/v2/",
 	"@id": "https://www.example-2.com/request/1243-124-1234-1234-1234",
 	"@type": "pip:InformationRequest",
 	"pip:expectedType": [ "xsd:decimal", "xsd:integer" ],
@@ -188,7 +188,7 @@ http request:
 POST https://www.nicos-ag.com/domain/group/admin/member
 
 {
-	"@context": https://github.com/nicosResearchAndDevelopment/pip/tree/main/v2/
+	"@context": "https://github.com/nicosResearchAndDevelopment/pip/tree/main/v2/",
 	"@id": "https://www.example-2.com/request/6767-7667-67-67-67-67",
 	"@type": "pip:InformationRequest",
 	"pip:target": "https://www.nicos-ag.com/domain/group/admin/member",
@@ -218,9 +218,8 @@ POST https://www.nicos-ag.com/domain/group/admin/member
 ```
 
 > POINT TO: problem of privacy/security
-
->> So: if the PIP does **NOT** show all members, we have to introduce a new PIP-Feature: resolving constraints...
-
+>
+> > So: if the PIP does **NOT** show all members, we have to introduce a new PIP-Feature: resolving constraints...
 
 ---
 
