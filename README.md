@@ -2,7 +2,6 @@
 
 Policy Information Point Model, PDP-DM
 
-
 ## Version 2
 
 [Here](./v2/)
