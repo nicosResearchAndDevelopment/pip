@@ -33,7 +33,7 @@ pip:
     rdfs:comment                  """"""@en ;
     rdfs:isDefinedBy              <https:jottomat.solidweb.org/profile/card#me> ; .
 
-pip:Information
+pip:Result
     a                owl:Class ;
     rdfs:subClassOf  prov:Entity ;
     a                skos:Concept ;
@@ -42,74 +42,88 @@ pip:Information
 ## TODO: TBD: it can be dropped?!?
 pip:requestId
     a                rdf:Property ;
-    rdfs:domain      pip:Information ;
+    rdfs:domain      pip:Result ;
     rdfs:range       xsd:anyURI ;    ## REM: cardinality [0..1]
     rdfs:comment     """Maybe used for asynchronous communication, too."""@en ;
     rdfs:isDefinedBy pip: .
 
 pip:requestedAt
     a                rdf:Property ;
-    rdfs:domain      pip:Information ;
+    rdfs:domain      pip:Result ;
     rdfs:range       xsd:dateTime ;    ## REM: cardinality [0..1]
     rdfs:isDefinedBy pip: .
 
 pip:unit
     a                rdf:Property ;
-    rdfs:domain      pip:Information ;
+    rdfs:domain      pip:Result ;
     rdfs:range       rdfs:Resource ;    ## REM: cardinality [0..1]
     rdfs:seeAlso     "http://www.openphacts.org/specs/2013/WD-units-20130913/" ; ## ALERT: unsafe!!!!!!!!!!!!!!!!!!
     rdfs:isDefinedBy pip: .
 
 pip:validFrom
     a                rdf:Property ;
-    rdfs:domain      pip:Information ;
+    rdfs:domain      pip:Result ;
     rdfs:range       xsd:dateTime ;    ## REM: cardinality [0..1]
     rdfs:isDefinedBy pip: .
 
 pip:validTo
     a                rdf:Property ;
-    rdfs:domain      pip:Information ;
+    rdfs:domain      pip:Result ;
     rdfs:range       xsd:dateTime ;    ## REM: cardinality [0..1]
     rdfs:isDefinedBy pip: .
 
 pip:termsOfUse
     a                rdf:Property ;
-    rdfs:domain      pip:Information ;
+    rdfs:domain      pip:Result ;
     rdfs:range       xsd:anyURI ;    ## TODO: cardinality [0..1] ?!?
     rdfs:isDefinedBy pip: .
 
 pip:value
     a                rdf:Property ;
-    rdfs:domain      pip:Information ;
+    rdfs:domain      pip:Result ;
     rdfs:range       rdfs:Resource ;    ## REM: cardinality [0..1]
+    rdfs:seeAlso     "https://github.com/nicosResearchAndDevelopment/LDS/blob/main/model/service/lds.service.profile.ttl" ;
     rdfs:isDefinedBy pip: .
+
+## region ServiceDescription
+
+@prefix lds:            <https://github.com/nicosResearchAndDevelopment/LDS#> .
+
+pip:ServiceDescription
+    a                owl:Class ;
+    rdfs:subClassOf  lds:ServiceProfile ;
+    a                skos:Concept ;
+    rdfs:comment     """Policy Information Point Service Description."""@en ;
+    rdfs:isDefinedBy pip: .
+
+## endregion ServiceDescription
 
 ## region information request
 
-pip:InformationRequest
+pip:Request
     a                owl:Class ;
     rdfs:subClassOf  prov:Entity ;      ## REM: so, behaves like a trigger...
     a                skos:Concept ;
-    rdfs:comment     """It is an (prov) Entity, not an (prov) Activity. On given *Policy Information Point Service Instance* (**PipSi**) this request behaves as a trigger to PipSi's instance of a 'pip:InformationProcess', an (prov) Activity, utilizing delivered instance of 'pip:InformationRequest'."""@en ;
+    rdfs:comment     """It is an (prov) Entity, not an (prov) Activity. On given *Policy Information Point Service Instance* (**PipSi**) this request behaves as a trigger to PipSi's instance of a 'pip:InformationProcess', an (prov) Activity, utilizing delivered instance of 'pip:Request'."""@en ;
     rdfs:isDefinedBy pip: .
 
 ## TODO: TBD: move to h2tp:Accept?!?
 pip:expectedType
     a                rdf:Property ;
-    rdfs:domain      pip:InformationRequest ;
+    rdfs:domain      pip:Request ;
     rdfs:range       rdfs:Class ;       ## REM: cardinality [0..1]
     rdfs:isDefinedBy pip: .
 
 pip:expectedUnit
     a                rdf:Property ;
-    rdfs:domain      pip:InformationRequest ;
+    rdfs:domain      pip:Request ;
     rdfs:range       rdfs:Resource ;    ## REM: cardinality [0..1]
     rdfs:isDefinedBy pip: .
 
 pip:target
     a                rdf:Property ;
-    rdfs:domain      pip:InformationRequest ;
-    rdfs:range       xsd:anyURI  ;    ## REM: cardinality [0..1]
+    rdfs:domain      pip:Request ;
+    rdfs:range       xsd:anyURI ;    ## REM: cardinality [0..1]
     rdfs:isDefinedBy pip: .
 
 ## endregion information request
@@ -121,7 +135,7 @@ pip:InformationProcess
     rdfs:subClassOf  prov:Activity ;        ## REM: "informing"
     ## rdfs:subClassOf fno:Function ;
     a                skos:Concept ;
-    rdfs:comment     """An instance of 'pip:InformationProcess' is an (prov) Activity on the side of given *Policy Information Point Service Instance*, **PipSi**, the data-provider. The finished (prov) Activity will generate the required (triggered by given *Policy Information Point Consumer*, **PipCo**, with an instance of 'pip:InformationRequest') instance of 'pip:Information', an (prov) Entity."""@en ;
+    rdfs:comment     """An instance of 'pip:InformationProcess' is an (prov) Activity on the side of given *Policy Information Point Service Instance*, **PipSi**, the data-provider. The finished (prov) Activity will generate the required (triggered by given *Policy Information Point Consumer*, **PipCo**, with an instance of 'pip:Request') instance of 'pip:Result', an (prov) Entity."""@en ;
     rdfs:isDefinedBy pip: .
 
 ## endregion process

@@ -12,7 +12,7 @@
 {
 	"@context": "https://github.com/nicosResearchAndDevelopment/pip/tree/main/v1/",
 	"@id": "https://www.example.com/information/request#42-42-42-42-42"
-	"@type": "pip:InformationRequest",
+	"@type": "pip:Request",
 	"pip:expectedType": "xsd:decimal",
 	"pip:expectedUnit": "https://dbpedia.org/page/Celsius"
 }
@@ -37,7 +37,7 @@ Remark: valid for 5 minutes.
 {
 	"@context": "https://github.com/nicosResearchAndDevelopment/pip/tree/main/v1/",
 	"@id": "https://www.example2.com/information/42-42-42-42-42"
-	"@type": "pip:Information",
+	"@type": "pip:Result",
 	"pip:requestId": "https://www.example.com/information/request#42-42-42-42-42",
 	"pip:requestedAt": "2023-07-17T12:00:01.042Z",
 	"pip:validFrom": "2023-07-17T12:00:01.042Z",

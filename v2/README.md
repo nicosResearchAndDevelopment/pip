@@ -29,7 +29,8 @@ This document describes the architecture of a *Policy Information Point* (**PIP*
 - [The P-Family](#the-p-family)
 - [Introduction of data-typed Information](#introduction-of-data-typed-information)
 - [Request for Information](#request-for-information)
-- [Introducing `pip:Information`-Request](#introducing-pipinformation--request)
+- [Introducing `pip:Result`-Request](#introducing-pipinformation--request)
+- [Service Description](#service-description)
 - [Implementation / Binding](#implementation--binding)
 - [Request, Cache and Subscription](#request-cache-and-subscription)
 
@@ -65,9 +66,18 @@ The PDP has indirect access to given information. So the decision utilises an ex
 
 ## Introduction of data-typed Information
 
+Definition fo `dataType` in ODRL, based on `xsd:`:
+
+``` json
+{
+	"dataType": {"@type": "xsd:anyType", "@id": "odrl:datatype"}
+}
+```
+...taken from: [https://www.w3.org/ns/odrl.jsonld](https://www.w3.org/ns/odrl.jsonld)
+
 The data-typed information (subjects *attribute* or *property*) is needed to be compared by binary operators:
 
-Example: A constraint, expressed in ODRL. This expression will be computed (by PDP) without *external* information provided, all information is nested in given *inner context* - and leads to `"true"`.
+Example: A constraint, expressed in ODRL. This expression will be computed (by PDP) **without external information** provided, all information is nested in given *inner context*, The Policy - and leads to `"true"`.
 
 ```json
 {
@@ -82,11 +92,11 @@ Example: A constraint, expressed in ODRL. This expression will be computed (by P
 
 Example: A constraint, expressed in ODRL. This expression uses the [`odrl:rightOperandReference`](https://www.w3.org/TR/odrl-vocab/#term-rightOperandReference).
 
-> "A reference to a web resource providing the value for the right operand of a Constraint."
+> ["A reference to a web resource providing the value for the right operand of a Constraint."](https://www.w3.org/TR/odrl-vocab/#term-rightOperandReference)
 
 and
 
-> "An IRI that MUST be dereferenced to obtain the actual right operand value."
+> ["An IRI that MUST be dereferenced to obtain the actual right operand value."](https://www.w3.org/TR/odrl-vocab/#term-rightOperandReference)
 
 ```json
 {
@@ -98,7 +108,7 @@ and
 	"odrl:unit": "http://qudt.org/vocab/unit/DEG_C"
 }
 ```
-> POINT TO: `odrl:unit`!
+> POINT TO: [`odrl:unit`](https://www.w3.org/TR/odrl-vocab/#term-unit)!
 
 
 ...shortcut 
@@ -121,7 +131,7 @@ Request of Information from given Information Point **PIP**.
 > 
 > *Resource*
 
-Example: **PDP** (or better: given **context handler**) de-references an URI that is *hopefully* an URL:
+Example: **PDP** (or better: given **context handler**) de-references a URI that is *hopefully* a URL:
 
 ```json
 {
@@ -138,7 +148,7 @@ GET https://www.nicos-ag.com/weather/station/muenster/temperature
 36
 ```
 
-## Introducing `pip:Information`-Request
+## Introducing `pip:Result`-Request
 
 POST wins, because of better *parametrization*:
 
@@ -152,12 +162,12 @@ POST https://www.nicos-ag.com/weather/station/muenster/temperature
 {
 	"@context": "https://github.com/nicosResearchAndDevelopment/pip/tree/main/v2/",
 	"@id": "https://www.example-2.com/request/1243-124-1234-1234-1234",
-	"@type": "pip:InformationRequest",
+	"@type": "pip:Request",
 	"pip:expectedType": [ "xsd:decimal", "xsd:integer" ],
 	"pip:expectedUnit": "http://qudt.org/vocab/unit/DEG_C"
 }
 ```
-> POINT TO: `pip:expectedType``as array!
+> POINT TO: `pip:expectedType` as array!
 
 ...response (remark: valid for 5 minutes):
 
@@ -165,7 +175,7 @@ POST https://www.nicos-ag.com/weather/station/muenster/temperature
 {
 	"@context": "https://github.com/nicosResearchAndDevelopment/pip/tree/main/v2/",
 	"@id": "https://www.nicos-ag.com/information/42-42-42-42-42"
-	"@type": "pip:Information",
+	"@type": "pip:Result",
 	"pip:requestId": "https://www.example-2.com/requast/1243-124-1234-1234-1234",
 	"pip:requestedAt": "2023-07-17T12:00:01.042Z",
 	"pip:validFrom": "2023-07-17T12:00:01.042Z",
@@ -180,23 +190,34 @@ POST https://www.nicos-ag.com/weather/station/muenster/temperature
 > 
 > POINT TO: unit conversion
 
-### 2. Request: members of a group:
+### 2. Request: member of a group
+
+Example: a constraint answering if someone is member of a group:
+
+```json
+{
+	"@type": "odrl:Constraint",
+	"odrl:leftOperand": { "@type": "xsd:anyURI", "@value": "https://www.nicos-ag.com/domain/user/juanjo" },
+	"odrl:operator": "odrl:isPartOf",
+	"odrl:rightOperandReference": { "@type": "xsd:anyURI", "@value": "https://www.nicos-ag.com/domain/group/admin/member" },
+	"odrl:dataType": "xsd:anyURI"
+}
+```
+> POINT TO: "odrl:dataType": "xsd:anyURI" :: data-type of given result!
 
 http request:
 
 ```http request
-POST https://www.nicos-ag.com/domain/group/admin/member
-
+POST https://www.nicos-ag.com/pip/
 {
 	"@context": "https://github.com/nicosResearchAndDevelopment/pip/tree/main/v2/",
 	"@id": "https://www.example-2.com/request/6767-7667-67-67-67-67",
-	"@type": "pip:InformationRequest",
+	"@type": "pip:Request",
 	"pip:target": "https://www.nicos-ag.com/domain/group/admin/member",
 	"pip:expectedType": "xsd:anyURI",
 }
 ```
-
-> POINT TO: `pip:target` ...so the POST-request is something different?!?
+> POINT TO: `pip:target` ...so the POST-request is maybe a little different?!? >>>
 
 ...response:
 
@@ -204,7 +225,7 @@ POST https://www.nicos-ag.com/domain/group/admin/member
 {
 	"@context": "https://github.com/nicosResearchAndDevelopment/pip/tree/main/v2/",
 	"@id": "https://www.nicos-ag.com/information/54-54-54-45-5-454"
-	"@type": "pip:Information",
+	"@type": "pip:Result",
 	"pip:requestId": "https://www.example-2.com/request/6767-7667-67-67-67-67",
 	"pip:requestedAt": "2023-08-17T12:00:01.042Z",
 	"pip:validFrom": "2023-08-17T12:00:01.042Z",
@@ -231,9 +252,30 @@ This kind is used to resolve Collections, (ODRL) Asset or Party Collections, but
 
 ---
 
+## Service Description
+
+http request:
+
+```http request
+GET https://www.nicos-ag.com/pip/
+```
+...response:
+
+```json
+{
+	"@context": "https://github.com/nicosResearchAndDevelopment/pip/tree/main/v2/",
+	"@type": "pip:ServiceDescription",
+	"pip:requestedAt": "2023-08-17T12:00:01.042Z"
+}
+```
+
+> POINT TO: introducing : [rdfs:subClassOf  lds:ServiceProfile ;](https://github.com/nicosResearchAndDevelopment/LDS/blob/main/model/service/lds.service.profile.ttl)
+
+---
+
 ## Authorisation
 
-Authorisation is intentional left open and defined by given mechanics, revealed by **Pip**, or *eco-system* acting in.
+Authorisation is intentional left open and defined by given mechanics, revealed by **Pip**, or *ecosystem* acting in.
 
 ---
 
@@ -259,15 +301,14 @@ Opened socket!
 ## Request, Cache and Subscription
 
 - Caching received data for tagged period of time (see: `pip:validTo`).
-- Subscription: cached information is the "freshest" possible. PIP "knows" and controls information-lifecyle.
+- Subscription: cached information is the "freshest" possible. PIP "knows" and controls information-lifecycle.
 
 ---
 
 ## Future
 
-`pip:Information`, `pip:InformationProcess` and `pip:InformationRequest` are already "prov-flavoured".
+`pip:Result`, `pip:InformationProcess` and `pip:Request` are already "prov-flavoured".
 
 > POINT TO: traceability of data-flow...
-
 
 ---
